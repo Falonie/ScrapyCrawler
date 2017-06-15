@@ -66,9 +66,9 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'itjuziSpider.pipelines.ItjuzispiderPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'itjuziSpider.pipelines.ItjuzispiderPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
