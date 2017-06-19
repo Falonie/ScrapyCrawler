@@ -9,7 +9,6 @@ class ItjuziSpider(scrapy.Spider):
     def start_requests(self):
         for i in range(1, 5):
             url = self.start_urls[0].format(i)
-            # u = {'url': url}
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
@@ -21,15 +20,10 @@ class ItjuziSpider(scrapy.Spider):
         times = response.xpath('//i[@class="cell date"]/span/text()').extract()
         # for product in products:
         #     yield {'product':product}
-        # for amount in financial_amount:
-        #     yield {'link': amount}
         for product, link, amount, investor, r, t in zip(products, links, financial_amount, investors, rounds, times):
             # yield {'product': product, 'link': link, 'amount': amount}
-            # product_name = item.xpath('span/text()').extract()
             p = {'product': product, 'financial amount': amount, 'investor': investor, 'rounds': r, 'time': t}
-            # href = item.xpath('@href').extract_first()
             yield scrapy.Request(url=link, meta={'item': p}, dont_filter=True, callback=self.page)
-            # yield scrapy.Request(url=link,dont_filter=True,callback=self.page)
         # for href in response.xpath('//div[@class="ui-pagechange for-sec-bottom"]/a[last()-1]/text()').extract():
         #     yield {'product':product,'links':link}
 
@@ -40,7 +34,6 @@ class ItjuziSpider(scrapy.Spider):
     def page(self,response):
         juzi = ItjuzispiderItem()
         juzi = response.meta.get('item', {})
-        # juzi = response.meta.get('u', {})
         company = response.xpath('//div[@class="des-more"]/div[1]/h2/text()').extract()
         juzi['company_name'] = str(company[0]).split('：')[1]
         homepage = response.xpath('//div[@class="picinfo"]/div[@class="link-line"]/a[@class="weblink"]/@href').extract()
@@ -52,13 +45,4 @@ class ItjuziSpider(scrapy.Spider):
         juzi['location'] = ''.join(locaiton)
         leadership = [str(i) for i in response.xpath('//h4[@class="person-name"]/a[@class="title"]/b/span/text()').extract()]
         juzi['leadership'] = ''.join(leadership)
-        # homepage = response.xpath(
-        #     '//div[@class="picinfo"]/div[@class="link-line"]/a[@class="weblink"]/@href').extract()[0]
-        # if response.xpath(
-        #     '//div[@class="picinfo"]/div[@class="link-line"]/a[@class="weblink"]/@href').extract()[0]:
-        #     juzi['homepage'] = response.xpath(
-        #     '//div[@class="picinfo"]/div[@class="link-line"]/a[@class="weblink"]/@href').extract()[0]
-        # else:
-        #     juzi['homepage'] = 'N/A'
-
         yield juzi
