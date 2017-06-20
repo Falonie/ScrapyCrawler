@@ -7,7 +7,7 @@ class ItjuziSpider(scrapy.Spider):
     start_urls = ['https://www.itjuzi.com/investevents?page={}']
 
     def start_requests(self):
-        for i in range(1, 2463):
+        for i in range(9, 2463):
             url = self.start_urls[0].format(i)
             yield scrapy.Request(url=url, callback=self.parse)
 
