@@ -10,5 +10,17 @@ import scrapy
 
 class BaixingTruckDriversItem(scrapy.Item):
     # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    title = scrapy.Field()
+    category = scrapy.Field()
+    position = scrapy.Field()
+    recruit = scrapy.Field()
+    location = scrapy.Field()
+    company = scrapy.Field()
+    scale = scrapy.Field()
+    nature = scrapy.Field()
+    industry = scrapy.Field()
+    contact = scrapy.Field()
+    authentication = scrapy.Field()
+    credit_ranking = scrapy.Field()
+    job_description = scrapy.Field()
+    company_description = scrapy.Field()
