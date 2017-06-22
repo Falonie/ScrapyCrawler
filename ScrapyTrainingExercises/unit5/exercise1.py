@@ -14,5 +14,10 @@ next_page_href=sel.xpath('//a[@class="pagnNext"]/@href').extract_first()
 next_page=base_url+next_page_href
 print(next_page)
 
-next_page_btn=driver.find_element_by_id('pagnNextString')
-next_page_btn.click()
+# next_page_btn=driver.find_element_by_id('pagnNextString')
+# next_page_btn.click()
+
+search_bar=driver.find_element_by_id('twotabsearchtextbox')
+search_bar.clear()
+search_bar.send_keys('java')
+driver.find_element_by_xpath('//div[@class="nav-search-submit nav-sprite"]/input').click()
