@@ -1,4 +1,4 @@
-import scrapy,sys,io
+import scrapy,sys,io,re
 from ..items import GanjiTruckDriversItem
 
 class GanjiTruckDrivers(scrapy.Spider):
@@ -26,6 +26,8 @@ class GanjiTruckDrivers(scrapy.Spider):
 
     def drivers_details(self, response):
         driver = GanjiTruckDriversItem()
+        sel = scrapy.Selector(response)
+        pattern = re.compile(r'[\u3000\xa0\u2003\xae\u2022\u200b\u200c\x81\u20e3\ufe0f\xad\u202a]')
         # response.encoding = 'charset=utf-8'
         driver['title'] = response.xpath('//div[@class="d-c-left-hear"]/h1/text()').extract()[0]
         driver['position'] = response.xpath('//ul[@class="clearfix pos-relat"]/li[1]/em/a/text()').extract_first()
@@ -39,11 +41,21 @@ class GanjiTruckDrivers(scrapy.Spider):
         driver['nature'] = response.xpath(
             '//div[@class="ad-firm-logo"]/div/div[last()-1]/span/a/text()').extract_first()
         driver['industry'] = response.xpath('//div[@class="ad-firm-logo"]/div/div[last()-2]/span/a/text()').extract_first()
-        driver['authentication'] = response.xpath(
-            '//div[@class="ad-firm-logo"]/div/div[last()-3]/span/text()').extract_first()
-        driver['credit_ranking'] = response.xpath('//div[@class="ad-firm-logo"]/div/div[last()-4]/div/@class').extract_first()
-        driver['job_description'] = ''.join([str(i).strip() for i in response.xpath(
-            '//div[@class="js-tab-show d-l-account fc4b"]/div[1]/text()').extract()])
-        driver['company_description'] = ''.join(
-            [str(i).strip() for i in response.xpath('//div[@class="js-tab-show d-com-intr fc4b"]/p/text()').extract()])
+
+        authentication = response.xpath('//div[@class="ad-firm-logo"]/div/div[last()-3]/span/text()').extract()
+        # driver['authentication'] = ''.join([str(i).strip() for i in authentication])
+        driver['authentication'] = pattern.sub('',''.join([str(i).strip() for i in authentication]))
+
+        credit_ranking = response.xpath('//div[@class="ad-firm-logo"]/div/div[last()-4]/div/@class').extract()
+        # driver['credit_ranking'] = ''.join([str(i).strip().replace('\xa0', '') for i in credit_ranking])
+        driver['credit_ranking'] = pattern.sub('',''.join([str(i).strip() for i in credit_ranking]))
+
+        job_description = response.xpath('//div[@class="js-tab-show d-l-account fc4b"]/div[1]/text()').extract()
+        # driver['job_description'] = ''.join([str(i).strip().replace('\xa0', '') for i in job_description])
+        driver['job_description'] = pattern.sub('',''.join([str(i).strip() for i in job_description]))
+
+        # company_description = response.xpath('//div[@class="js-tab-show d-com-intr fc4b"]/p/text()').extract()
+        # driver['company_description'] = ''.join([str(i).strip().replace('\xa0', '') for i in company_description])
+        company_description = response.xpath('//div[@class="js-tab-show d-com-intr fc4b"]/p/text()').extract()
+        driver['company_description'] = pattern.sub('', ''.join([str(i).strip() for i in company_description]))
         yield driver

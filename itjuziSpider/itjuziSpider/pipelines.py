@@ -23,7 +23,7 @@ class ItjuzispiderPipeline(object):
         self.connection.commit()
 
         try:
-            with open('itjuzi.csv','a+',newline='') as f:
+            with open('itjuzi1.csv','a+',newline='') as f:
                 writer = csv.writer(f)
                 writer.writerow((item['company_name'],item['product'],item['time'],item['rounds'],item['financial amount'],
                                  item['industry'],item['scale'],item['location'],item['leadership'],item['homepage']))
