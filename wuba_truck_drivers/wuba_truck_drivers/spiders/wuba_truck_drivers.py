@@ -25,7 +25,7 @@ class WubaTruckDrivers(scrapy.Spider):
 
     def driver_details(self, response):
         driver = WubaTruckDriversItem()
-        pattern = re.compile(r'[\u3000\xa0\u2003\xae\u2022\u200b\u200c\x81\u20e3\ufe0f\xad\u202a\u200d\u2212]')
+        pattern = re.compile(r'[\u3000\xa0\u2003\xae\u2022\u200b\u200c\x81\u20e3\ufe0f\xad\u202a\u200d\u2212 ]')
         for item in response.xpath('//div[@class="item_con pos_info"]'):
             title = item.xpath('div[@class="pos_base_info"]/span/text()').extract()
             driver['title'] = ''.join([str(i) for i in title])
