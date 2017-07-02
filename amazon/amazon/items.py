@@ -14,4 +14,3 @@ class AmazonItem(scrapy.Item):
     ratings = scrapy.Field()
     price = scrapy.Field()
     publishing_date = scrapy.Field()
-    # pass
