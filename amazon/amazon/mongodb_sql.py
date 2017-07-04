@@ -16,3 +16,5 @@ for i,item in enumerate(amazon.find(),1):
 # db.amazon.drop()
 # db.amazon_2.remove()
 # db.amazon2.drop()
+# client['test_database']['profiles'].drop()
+client['employee']['amazon_python_books'].remove()
