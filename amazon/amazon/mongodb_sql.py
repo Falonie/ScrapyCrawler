@@ -6,7 +6,7 @@ db=client['employee']
 amazon=db['amazon']
 # amazon_2=db['amazon_2']
 
-for i,item in enumerate(amazon.find(),1):
+for i,item in enumerate(amazon.find({}),1):
     print(i,item)
 
 # print('\n')
@@ -17,4 +17,6 @@ for i,item in enumerate(amazon.find(),1):
 # db.amazon_2.remove()
 # db.amazon2.drop()
 # client['test_database']['profiles'].drop()
-client['employee']['amazon_python_books'].remove()
+# client['employee']['amazon_python_books'].remove()
+print(db['amazon_python_books'].count())
+db['amazon'].remove()

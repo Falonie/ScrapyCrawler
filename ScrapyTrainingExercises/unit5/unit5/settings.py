@@ -66,9 +66,9 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-   'unit5.pipelines.Unit5Pipeline': 300,
-}
+# ITEM_PIPELINES = {
+#    'unit5.pipelines.Unit5Pipeline': 300,
+# }
 
 MONGODB_SERVER='localhost'
 MONGODB_PORT=27017

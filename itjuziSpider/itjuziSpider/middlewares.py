@@ -6,7 +6,7 @@
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
-
+import random
 
 class ItjuzispiderSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,

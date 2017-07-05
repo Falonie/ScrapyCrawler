@@ -54,9 +54,9 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'itjuziSpider.middlewares.MyCustomDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   'itjuziSpider.middlewares.MyCustomDownloaderMiddleware': 543,
+}
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
@@ -69,6 +69,11 @@ DEFAULT_REQUEST_HEADERS = {
 ITEM_PIPELINES = {
    'itjuziSpider.pipelines.ItjuzispiderPipeline': 300,
 }
+
+MONGODB_SERVER='localhost'
+MONGODB_PORT=27017
+MONGODB_DB='employee'
+MONGODB_COLLECTION='itjuziSpider'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html

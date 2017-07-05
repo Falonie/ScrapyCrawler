@@ -8,6 +8,7 @@ import pymysql, pymongo
 from scrapy.conf import settings
 from scrapy.exceptions import DropItem
 from scrapy.log import logger
+from scrapy import log
 from .items import AmazonItem
 
 
@@ -34,5 +35,6 @@ class AmazonPipeline(object):
                 raise DropItem('Missing {}!'.format(data))
         if valid:
             self.collection.insert(dict(item))
-            # logger.log("Question added to MongoDB database!")
+            logger.log("Question added to MongoDB database!")
+            # log.logger.log()
         return item

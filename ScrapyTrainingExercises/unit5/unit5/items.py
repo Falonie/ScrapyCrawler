@@ -10,3 +10,6 @@ import scrapy
 
 class Unit5Item(scrapy.Item):
     book_name = scrapy.Field()
+    ratings = scrapy.Field()
+    price = scrapy.Field()
+    publishing_date = scrapy.Field()
