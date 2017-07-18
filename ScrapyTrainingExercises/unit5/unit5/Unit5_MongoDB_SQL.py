@@ -13,3 +13,4 @@ db=client['employee']
 # # db['amazon_python_books_old'].rename('amazon_python_books_cn')
 # print(db['amazon_python_books'].name)
 # db['amazon_python_books'].copyTo('amazon_1')
+db['amazon_python_books'].remove()

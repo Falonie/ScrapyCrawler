@@ -1,9 +1,12 @@
 import scrapy
 from scrapy.http import Request
+from scrapy.spiders import CrawlSpider
+from scrapy_redis.spiders import RedisSpider
 from ..items import AmazonItem
 
-class Amazon(scrapy.Spider):
+class Amazon(RedisSpider):
     name = "amazon"
+    redis_key = 'Amazon:start_urls'
     start_urls = [
         'https://www.amazon.com/s/ref=sr_pg_{page}?rh=n%3A283155%2Ck%3Apython&page={page}&d=1&keywords=python&ie=UTF8&qid=1498837060&spIA=1786468522,B01MS6NN02,B071G3652S,178646439X']
 
@@ -13,7 +16,7 @@ class Amazon(scrapy.Spider):
         # cookie = {
         #     'Cookie': 'session-token=f8xAgLueBhn9NCL0gpB048RXVzNkWuDnR+Qya6Wu7Zkz6Y831ogI4ftVSnvSVkAWH5ngYgVppgpvPg3Fjin203H4h6UpLBvwYbwuzf6SZGnYAXO51P2TtArNy/zMZr0FdSwm7nQIDnSjhsbpC2V8MVXlSHcbQ4/023HJZDIbsREo7KEd942p6j4l3Igv/oTJ; x-wl-uid=1GYh/oY10ZWNjqqmYG7mrEkboksY1LoZD0y/RpHmhZ8M/jFyqksWg0JOSBro6U+xTnVg4cxiLkzg=; skin=noskin; JSESSIONID=27E42C46E14D9A6166A39323CB256E92; session-id-time=2082787201l; session-id=159-4015366-6650112; ubid-main=160-7552422-4139833; csm-hit=ZFMXG7B4A0MYJWN39E1J+sa-ZFMXG7B4A0MYJWN39E1J-KG72V5XKQ5RZ241J79XQ|1492441072302'}
 
-        for i in range(1, 10):
+        for i in range(1, 5):
             url = self.start_urls[0].format(page=i)
             yield scrapy.Request(url=url, callback=self.parse)
 

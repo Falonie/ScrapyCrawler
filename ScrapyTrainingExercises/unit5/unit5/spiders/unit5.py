@@ -1,4 +1,6 @@
 import scrapy
+from scrapy_redis.spiders import RedisSpider
+from scrapy.spiders import CrawlSpider
 from ..items import Unit5Item
 from selenium import webdriver
 

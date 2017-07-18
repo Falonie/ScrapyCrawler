@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for amazon project
+# Scrapy settings for wutong_shanghai1 project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,22 +9,17 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'amazon'
+BOT_NAME = 'wutong_shanghai1'
 
-SPIDER_MODULES = ['amazon.spiders']
-NEWSPIDER_MODULE = 'amazon.spiders'
+SPIDER_MODULES = ['wutong_shanghai1.spiders']
+NEWSPIDER_MODULE = 'wutong_shanghai1.spiders'
 
-# MYSQL_HOST = 'localhost'
-# MYSQL_USER = 'root'
-# MYSQL_PASSWORD = '1234'
-# MYSQL_DBNAME = 'employee'
-# MYSQL_CHARSET = 'utfmb4'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'amazon (+http://www.yourdomain.com)'
+#USER_AGENT = 'wutong_shanghai1 (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -46,19 +41,28 @@ ROBOTSTXT_OBEY = True
 # Override the default request headers:
 DEFAULT_REQUEST_HEADERS = {
     'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-    'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36'}
+    'Accept-Encoding':'gzip, deflate, sdch',
+    'Accept-Language':'zh-CN,zh;q=0.8',
+    'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'}
 
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    'amazon.middlewares.AmazonSpiderMiddleware': 543,
-#}
+# SPIDER_MIDDLEWARES = {
+#     'wutong_shanghai1.middlewares.WutongShanghai1SpiderMiddleware': 543,
+#     'wutong_shanghai1.middlewares.ProxyMiddleware': 544,
+# }
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'amazon.middlewares.MyCustomDownloaderMiddleware': 543,
-#}
+# DOWNLOADER_MIDDLEWARES = {
+#     'wutong_shanghai1.middlewares.ProxyMiddleware': 544,
+#     # 'wutong_shanghai1.middlewares.MyCustomDownloaderMiddleware': 543,
+# }
+
+DOWNLOADER_MIDDLEWARES = {
+    # 'pricecheck_crawler.ProxyMiddleware.ProxyRotator': 100,
+    'wutong_shanghai1.middlewares.UAMiddleware': 543,
+    'wutong_shanghai1.middlewares.ProxyMiddleware': 544}
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
@@ -69,14 +73,12 @@ DEFAULT_REQUEST_HEADERS = {
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    # 'amazon.pipelines.AmazonPipeline': 300,
-    'scrapy_redis.pipelines.RedisPipeline': 400
+   'wutong_shanghai1.pipelines.WutongShanghai1Pipeline': 300,
 }
 
-MONGODB_SERVER='localhost'
-MONGODB_PORT=27017
-MONGODB_DB='employee'
-MONGODB_COLLECTION='amazon'
+# IP_LIST=[]
+
+# User_Agent_List=[]
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -99,8 +101,11 @@ MONGODB_COLLECTION='amazon'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-SCHEDULER = "scrapy_redis.scheduler.Scheduler"
-DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
-SCHEDULER_PERSIST = True
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
+SCHEDULER="scrapy_redis.scheduler.Scheduler"
+
+DUPEFILTER_CLASS="scrapy_redis.dupefilter.RFPDupeFilter"
+
+# SCHEDULER_PERSIST=True
+
+# REDIS_HOST='127.0.0.1'
+# REDIS_PORT=6379

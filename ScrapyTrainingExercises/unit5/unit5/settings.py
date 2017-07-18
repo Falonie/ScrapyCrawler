@@ -66,9 +66,10 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-# ITEM_PIPELINES = {
-#    'unit5.pipelines.Unit5Pipeline': 300,
-# }
+ITEM_PIPELINES = {
+    'unit5.pipelines.Unit5Pipeline': 300,
+    # 'scrapy_redis.pipelines.RedisPipeline': 300
+}
 
 MONGODB_SERVER='localhost'
 MONGODB_PORT=27017
@@ -95,3 +96,12 @@ MONGODB_COLLECTION='amazon_python_books'
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+# SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+# DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+# SCHEDULER_PERSIST = True
+
+# LOG_LEVEL = 'DEBUG'
+
+# REDIS_HOST = 'localhost'
+# REDIS_PORT = 6379
