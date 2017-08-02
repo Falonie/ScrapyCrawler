@@ -1,6 +1,7 @@
 import scrapy
 from ..items import ItjuzispiderItem
 
+
 class ItjuziSpider(scrapy.Spider):
     name = 'itjuzi'
     # start_urls = ['https://www.itjuzi.com/investevents?page=1']
@@ -32,7 +33,7 @@ class ItjuziSpider(scrapy.Spider):
         # if next_page:
         #     yield scrapy.Request(url=next_page, callback=self.parse)
 
-    def page(self,response):
+    def page(self, response):
         juzi = ItjuzispiderItem()
         juzi = response.meta.get('item', {})
         company = response.xpath('//div[@class="des-more"]/div[1]/h2/text()').extract()

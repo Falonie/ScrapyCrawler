@@ -21,7 +21,7 @@ class ItjuzispiderPipeline(object):
 
     def process_item(self, item, spider):
 
-        sql='insert into itjuzi (PRODUCT,COMPANY_NAME,TIME,ROUND,FINANCIAL_AMOUNT,INDUSTRY,SCALE,LOCATION,LEADERSHIP,HOMEPAGE) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+        sql = 'insert into itjuzi (PRODUCT,COMPANY_NAME,TIME,ROUND,FINANCIAL_AMOUNT,INDUSTRY,SCALE,LOCATION,LEADERSHIP,HOMEPAGE) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
         self.cursor.execute(sql, (item['product'], item['company_name'], item['time'], item['rounds'], item['financial amount'],
                                   item['industry'], item['scale'], item['location'], item['leadership'], item['homepage']))
         self.connection.commit()
