@@ -1,4 +1,4 @@
-import scrapy, re
+import scrapy, re, logging
 from scrapy.http import Request
 from ..items import QichachaItem
 from selenium import webdriver
@@ -6,8 +6,6 @@ from selenium import webdriver
 
 class QichachaSpider(scrapy.Spider):
     name = 'qichacha_all'
-    # start_urls = [
-    #     'http://www.qichacha.com/search?key=%E5%B9%BF%E4%B8%9C%E5%BE%B7%E5%B0%94%E9%A1%BF%E7%A3%81%E8%83%BD%E7%83%AD%E6%B0%B4%E5%99%A8%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8']
     # start_urls = [
     #     'http://www.qichacha.com/search?key=%E5%B9%BF%E5%B7%9E%E5%B8%82%E8%81%94%E4%B8%8A%E7%82%89%E5%85%B7%E8%B4%B8%E6%98%93%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8']
     # start_urls = ['http://www.qichacha.com/search?key=奥特朗电器（广州）有限公司']
@@ -18,7 +16,7 @@ class QichachaSpider(scrapy.Spider):
     #     super(QichachaSpider, self).__init__(*args, **kwargs)
 
     def start_requests(self):
-        with open('/media/salesmind/Other/OTMS/qichacha_all_dimensions_test.txt', 'r') as f:
+        with open('/media/salesmind/Other/OTMS/qichacha_all_dimensions.txt', 'r') as f:
             for i, line in enumerate(f.readlines(), 1):
                 # print(i, line.strip())
                 url = self.start_urls[0].format(line.strip())
@@ -34,14 +32,13 @@ class QichachaSpider(scrapy.Spider):
         href = sel.xpath('//*[@id="searchlist"]/table[1]/tbody/tr/td[2]/a/@href').extract_first()
         unique_key = re.split(r'[_.]', href)[1]
         a = {'company_name': company_name}
-        # print(unique_key)
         # print(company_name, href, unique_key)
-        # yield scrapy.Request(url=basic_url.format(unique_key, company_name), meta={'item': a},
-        #                      callback=self.parse_basic)
-        # yield scrapy.Request(url=business.format(unique_key, company_name), meta={'item': a},
-        #                      callback=self.parse_business)
-        yield scrapy.Request(url=financial_report.format(unique_key, company_name), meta={'item': a},
-                             callback=self.parse_financial_report)
+        yield scrapy.Request(url=basic_url.format(unique_key, company_name), meta={'item': a},
+                             callback=self.parse_basic)
+        yield scrapy.Request(url=business.format(unique_key, company_name), meta={'item': a},
+                             callback=self.parse_business)
+        # yield scrapy.Request(url=financial_report.format(unique_key, company_name), meta={'item': a},
+        #                      callback=self.parse_financial_report)
 
     def parse_basic(self, response):
         qichacha = QichachaItem()
@@ -64,9 +61,9 @@ class QichachaSpider(scrapy.Spider):
             i = str(i).strip().replace('：', '')
             qichacha[i] = t
         for j, i in enumerate(sel.xpath('//*[@id="Sockinfo"]/table[@class="m_changeList"]/tr[position()>1]'), 1):
-            s = i.xpath('td/text()|td/div/a[1]/text()').extract()
+            shareholders = i.xpath('td/text()|td/div/a[1]/text()').extract()
             a = 'shareholder{}'.format(j)
-            b = ''.join(str(i).strip() for i in s)
+            b = ''.join(str(i).strip() for i in shareholders)
             # print('shareholder{}'.format(j), ''.join(str(i).strip() for i in s))
             qichacha[a] = b
         for i, j in enumerate(sel.xpath('//*[@id="Mainmember"]/table[@class="m_changeList"]/tr[position()>1]'), 1):
@@ -99,14 +96,10 @@ class QichachaSpider(scrapy.Spider):
                 b = str(c).strip()
                 # print(a, b)
                 qichacha[a] = b
-                # yield qichacha
+        # yield qichacha
 
     def parse_financial_report(self, response):
         # qichacha = QichachaItem()
-        # print(type(response.body), type(response), type(response.body.decode('utf-8')))
-        # print(response.body.decode('utf-8'))
-        # self.driver.get(response.url)
-        # print(self.driver.page_source)
         qichacha = response.meta.get('item', '')
         sel = scrapy.Selector(response)
         r = response.body.decode('utf-8')

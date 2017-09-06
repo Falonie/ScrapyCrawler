@@ -10,7 +10,7 @@ class QichachaSpider(scrapy.Spider):
     #     'http://www.qichacha.com/search?key=%E5%B9%BF%E4%B8%9C%E5%BE%B7%E5%B0%94%E9%A1%BF%E7%A3%81%E8%83%BD%E7%83%AD%E6%B0%B4%E5%99%A8%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8']
     # start_urls = [
     #     'http://www.qichacha.com/search?key=%E5%B9%BF%E5%B7%9E%E5%B8%82%E8%81%94%E4%B8%8A%E7%82%89%E5%85%B7%E8%B4%B8%E6%98%93%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8']
-    start_urls=['http://www.qichacha.com/search?key=奥特朗电器（广州）有限公司']
+    start_urls = ['http://www.qichacha.com/search?key=奥特朗电器（广州）有限公司']
 
     # def __init__(self, *args, **kwargs):
     #     self.driver = webdriver.PhantomJS(executable_path=r'E:\files\phantomjs-2.1.1-windows\bin\phantomjs.exe')
@@ -20,24 +20,23 @@ class QichachaSpider(scrapy.Spider):
         # print(type(response), type(str(response)), type(response.body.decode('utf-8')))
         sel = scrapy.Selector(response)
         basic_url = 'http://www.qichacha.com/company_getinfos?unique={0}&companyname={1}&tab=base'
-        business='http://www.qichacha.com/company_getinfos?unique={0}&companyname={1}&tab=run'
-        financial_report='http://www.qichacha.com/company_getinfos?unique={0}&companyname={1}&tab=report'
+        business = 'http://www.qichacha.com/company_getinfos?unique={0}&companyname={1}&tab=run'
+        financial_report = 'http://www.qichacha.com/company_getinfos?unique={0}&companyname={1}&tab=report'
         company_name = sel.xpath('//*[@id="searchlist"]/table[1]/tbody/tr/td[2]/a/em/em/text()').extract_first()
         href = sel.xpath('//*[@id="searchlist"]/table[1]/tbody/tr/td[2]/a/@href').extract_first()
         unique_key = re.split(r'[_.]', href)[1]
         a = {'company_name': company_name}
         # print(unique_key)
         # print(company_name, href, unique_key)
-        self.new_basic_url=basic_url.format(unique_key, company_name)
-        self.new_business_url=business.format(unique_key, company_name)
-        self.new_financial_report_url=financial_report.format(unique_key, company_name)
+        self.new_basic_url = basic_url.format(unique_key, company_name)
+        self.new_business_url = business.format(unique_key, company_name)
+        self.new_financial_report_url = financial_report.format(unique_key, company_name)
         yield scrapy.Request(url=basic_url.format(unique_key, company_name), meta={'item': a},
                              callback=self.parse_basic)
         # yield scrapy.Request(url=business.format(unique_key, company_name), meta={'item': a},
         #                      callback=self.parse_business)
         # yield scrapy.Request(url=financial_report.format(unique_key, company_name), meta={'item': a},
         #                      callback=self.parse_financial_report)
-
 
     def parse_basic(self, response):
         qichacha = QichachaItem()
@@ -57,7 +56,7 @@ class QichachaSpider(scrapy.Spider):
         # print(len(title),title)
         # print(len(info),info)
         for i, t in zip(title, info):
-            i = str(i).strip().replace('：','')
+            i = str(i).strip().replace('：', '')
             qichacha[i] = t
         for j, i in enumerate(sel.xpath('//*[@id="Sockinfo"]/table[@class="m_changeList"]/tr[position()>1]'), 1):
             s = i.xpath('td/text()|td/div/a[1]/text()').extract()
@@ -74,11 +73,11 @@ class QichachaSpider(scrapy.Spider):
         introduction = sel.xpath('//section[@id="Comintroduce"]/div[2]/div/p/text()').extract()
         qichacha['introduction'] = ''.join(str(i).strip() for i in introduction)
         # item={a:b,c:d}
-        yield scrapy.Request(url=self.new_business_url,callback=self.parse_business)
+        yield scrapy.Request(url=self.new_business_url, callback=self.parse_business)
         # yield qichacha
 
     def parse_business(self, response):
-        qichacha=QichachaItem()
+        qichacha = QichachaItem()
         qichacha = response.meta.get('item', '')
         sel = scrapy.Selector(response)
         r = response.body.decode('utf-8')
@@ -98,6 +97,7 @@ class QichachaSpider(scrapy.Spider):
                 # print(a, b)
                 qichacha[a] = b
         yield qichacha
+
 
 """
     def parse_financial_report(self, response):

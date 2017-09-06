@@ -6,9 +6,11 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import pymongo
 
+
 class QichachaPipeline(object):
     def __init__(self):
-        self.collection=pymongo.MongoClient(host='localhost',port=27017)['employee']['qichacha2']
+        self.collection = pymongo.MongoClient(host='localhost', port=27017)['employee']['qichacha']
+
     def process_item(self, item, spider):
         try:
             self.collection.insert(dict(item))

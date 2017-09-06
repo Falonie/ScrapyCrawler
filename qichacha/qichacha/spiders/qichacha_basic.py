@@ -13,7 +13,6 @@ class QichachaSpider(scrapy.Spider):
     # start_urls=['http://www.qichacha.com/search?key=奥特朗电器（广州）有限公司']
     start_urls = ['http://www.qichacha.com/search?key={}']
 
-
     # def __init__(self, *args, **kwargs):
     #     self.driver = webdriver.PhantomJS(executable_path=r'E:\files\phantomjs-2.1.1-windows\bin\phantomjs.exe')
     #     super(QichachaSpider, self).__init__(*args, **kwargs)
@@ -57,7 +56,7 @@ class QichachaSpider(scrapy.Spider):
         # print(len(title),title)
         # print(len(info),info)
         for i, t in zip(title, info):
-            i = str(i).strip().replace('：','')
+            i = str(i).strip().replace('：', '')
             qichacha[i] = t
         for j, i in enumerate(sel.xpath('//*[@id="Sockinfo"]/table[@class="m_changeList"]/tr[position()>1]'), 1):
             s = i.xpath('td/text()|td/div/a[1]/text()').extract()
