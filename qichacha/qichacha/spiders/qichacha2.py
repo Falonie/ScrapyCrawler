@@ -16,10 +16,16 @@ class QichachaSpider(scrapy.Spider):
 
     def parse(self, response):
         sel = scrapy.Selector(response)
-        company_name = sel.xpath('//*[@id="searchlist"]/table[1]/tbody/tr/td[2]/a/em/em/text()').extract_first()
+        company_name = sel.xpath('//*[@id="searchlist"]/table/tbody/tr[1]/td[2]/a/descendant::text()').extract()
+        company_name = ''.join(str(i).strip() for i in company_name)
+        email = sel.xpath('//*[@id="searchlist"]/table/tbody/tr[1]/td[2]/p[2]/span/text()').extract_first('N/A')
+        legal_representative = sel.xpath('//*[@id="searchlist"]/table/tbody/tr[1]/td[2]/p[1]/a/text()').extract_first('N/A')
+        telephone = sel.xpath('//*[@id="searchlist"]/table/tbody/tr[1]/td[2]/p[2]/text()').extract_first('N/A')
+        telephone = ''.join(str(i).strip() for i in telephone)
         href = sel.xpath('//*[@id="searchlist"]/table[1]/tbody/tr/td[2]/a/@href').extract_first()
         unique_key = re.split(r'[_.]', href)[1]
-        a = {'company_name': company_name, 'href': href, 'unique_key': unique_key}
+        a = {'company_name': company_name, 'legal_representative': legal_representative, 'email': email,
+             'telephone': telephone}
         print(company_name, href, unique_key)
 
 

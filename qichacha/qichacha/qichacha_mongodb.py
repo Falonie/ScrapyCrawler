@@ -6,6 +6,6 @@ for i, j in enumerate(collection.find({}), 1):
 
 # collection.drop()
 
-# with open('/media/salesmind/Other/OTMS/qichacha_all_dimensions.txt', 'r') as f:
-#     for i, line in enumerate(f.readlines(), 1):
-#         print(i, line.strip())
+with open('/media/salesmind/Other/OTMS/qichacha_all_dimensions_test.txt', 'r') as f:
+    for i, line in enumerate(f.readlines(), 1):
+        print(i, line.strip())
