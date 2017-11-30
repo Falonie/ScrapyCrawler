@@ -1,13 +1,10 @@
 import scrapy, re, logging
-from scrapy.http import Request
 from ..items import QichachaItem
 from selenium import webdriver
 
 
 class QichachaSpider(scrapy.Spider):
     name = 'qichacha_all'
-    # start_urls = [
-    #     'http://www.qichacha.com/search?key=%E5%B9%BF%E5%B7%9E%E5%B8%82%E8%81%94%E4%B8%8A%E7%82%89%E5%85%B7%E8%B4%B8%E6%98%93%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8']
     # start_urls = ['http://www.qichacha.com/search?key=奥特朗电器（广州）有限公司']
     start_urls = ['http://www.qichacha.com/search?key={}']
 
@@ -64,9 +61,7 @@ class QichachaSpider(scrapy.Spider):
         info = pattern2.findall(r)
         # print(len(title),title)
         # print(len(info),info)
-        for i, t in zip(title, info):
-            i = str(i).strip().replace('：', '')
-            qichacha[i] = t
+        qichacha.update({str(i).strip().replace('：', ''): t for i, t in zip(title, info)})
         for j, i in enumerate(sel.xpath('//*[@id="Sockinfo"]/table[@class="m_changeList"]/tr[position()>1]'), 1):
             shareholders = i.xpath('td/text()|td/div/a[1]/text()').extract()
             a = 'shareholder{}'.format(j)
@@ -81,7 +76,8 @@ class QichachaSpider(scrapy.Spider):
             qichacha[c] = d
         introduction = sel.xpath('//section[@id="Comintroduce"]/div[2]/div/p/text()').extract()
         qichacha['introduction'] = ''.join(str(i).strip() for i in introduction)
-        yield qichacha
+        qichacha['分支机构'] = sel.xpath('//*[@id="Subcom"]/div[1]/span[2]/text()').extract_first(default='N/A')
+        # yield qichacha
 
     def parse_business(self, response):
         # qichacha = QichachaItem()
@@ -94,41 +90,36 @@ class QichachaSpider(scrapy.Spider):
             a = 'recruit_member{}'.format(j)
             b = ''.join(str(i).strip() for i in joblist)
             qichacha[a] = b
+        jobs_amout = sel.xpath('//section[@id="joblist"]/div[1]/span/text()').extract()
+        qichacha['jobs_amout']=''.join(str(i) for i in jobs_amout)
+        job_release_lates_date = sel.xpath('//section[@id="joblist"]/table[@class="m_changeList"]/'
+                                           'tbody/tr[2]/td/descendant::text()').extract()
+        qichacha['latest_job'] = ','.join(str(i).strip() for i in job_release_lates_date)
         for i in sel.xpath('//*[@id="V3_cwzl"]/table/tr'):
             title = i.xpath('td[position()=1 or position()=3]/text()').extract()
             content = i.xpath('td[position()=2 or position()=4]/text()').extract()
-            # print(title,content)
-            for t, c in zip(title, content):
-                a = str(t).strip().replace('：', '')
-                b = str(c).strip()
-                # print(a, b)
-                qichacha[a] = b
-        # yield qichacha
+            qichacha.update({str(t).strip().replace('：', ''): str(c).strip() for t, c in zip(title, content)})
+        for i in sel.xpath('//section[@id="financingList"]/table[@class="m_changeList"]'):
+            head = i.xpath('thead/th/text()').extract()
+            item = i.xpath('tbody/tr[1]/td/descendant::text()').extract()
+            financing_content = [str(i).strip() for i in item]
+            financing_content = list(filter(lambda x: len(x) > 1, financing_content))
+            qichacha.update({k: v for k, v in zip(head, financing_content)})
+        yield qichacha
 
     def parse_financial_report(self, response):
         # qichacha = QichachaItem()
         qichacha = response.meta.get('item', '')
         sel = scrapy.Selector(response)
         r = response.body.decode('utf-8')
-        for i in sel.xpath(
-                '//div[@class="tab-pane fade in active"]/table[@class="table table-bordered"]/tbody/tr|//div[@class="tab-pane fade in active"]/table[@class="table table-bordered"]/tr'):
+        for i in sel.xpath('//div[@class="tab-pane fade in active"]/table[@class="table table-bordered"]/tbody/tr|'
+                           '//div[@class="tab-pane fade in active"]/table[@class="table table-bordered"]/tr'):
             title = i.xpath('td[position()=1 or position()=3]/text()').extract()
             content = i.xpath('td[position()=2 or position()=4]/text()').extract()
-            # print(a,b)
-            for a, b in zip(title, content):
-                a = str(a).strip().replace('：', '')
-                b = str(b).strip()
-                # print(a, b)
-                qichacha[a] = b
+            qichacha.update({str(k).strip().replace('：', ''):str(v).strip() for k,v in zip(title,content)})
         for i in sel.xpath('//div[@class="tab-pane fade in active"]/table[2]/tbody'):
             title = i.xpath('tr[1]/td/text()').extract()
-            # print(title)
             content = i.xpath('tr[2]/td/text()|tr[2]/td/a/text()').extract()
             content = list(filter(lambda x: len(x) > 1, content))
-            # print(content)
-            for t, c in zip(title, content):
-                t = str(t).strip().replace('：', '')
-                c = str(c).strip()
-                # print(t, c)
-                qichacha[t] = c
+            qichacha.update({str(t).strip().replace('：', ''): str(c).strip() for t, c in zip(title, content)})
         # yield qichacha
