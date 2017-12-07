@@ -5,7 +5,6 @@ from selenium import webdriver
 
 class QichachaSpider(scrapy.Spider):
     name = 'qichacha_all'
-    # start_urls = ['http://www.qichacha.com/search?key=奥特朗电器（广州）有限公司']
     start_urls = ['http://www.qichacha.com/search?key={}']
 
     # def __init__(self, *args, **kwargs):
@@ -55,9 +54,9 @@ class QichachaSpider(scrapy.Spider):
         r = response.body.decode('utf-8')
         # title = sel.xpath('//table[@class="m_changeList"]/tr/td[@class="ma_bluebg ma_left"]/text()').extract()
         # info = sel.xpath('//table[@class="m_changeList"]/tr/td[2]/text()|//table[@class="m_changeList"]/tr/td[4]/text()').extract()
-        pattern = re.compile(r'<td class="ma_bluebg ma_left".*?>\s*(.*?)\s*</td> ')
-        title = pattern.findall(r)
-        pattern2 = re.compile(r'td class="ma_left".*?>\s*(.*?)\s*<')
+        pattern = re.compile(r'class="ma_bluebg ma_left".*?>\s*(.*?)\s*</td> ')
+        title = pattern.findall(r)[2::]
+        pattern2 = re.compile(r'class="ma_left".*?>\s*(.*?)\s*<')
         info = pattern2.findall(r)
         # print(len(title),title)
         # print(len(info),info)
