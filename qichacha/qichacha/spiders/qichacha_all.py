@@ -1,4 +1,4 @@
-import scrapy, re, logging
+import scrapy, re, logging, xlrd
 from ..items import QichachaItem
 from selenium import webdriver
 
@@ -17,6 +17,14 @@ class QichachaSpider(scrapy.Spider):
                 # print(i, line.strip())
                 url = self.start_urls[0].format(line.strip())
                 yield scrapy.Request(url=url, callback=self.parse)
+
+    # def start_requests(self):
+    #     with xlrd.open_workbook('/media/salesmind/Other/Ctrip/快租365-分支.xlsx') as data:
+    #         table = data.sheets()[0]
+    #         for rownum in range(1, table.nrows):
+    #             row = table.row_values(rownum)
+    #             url = self.start_urls[0].format(str(row[0]).strip())
+    #             yield scrapy.Request(url=url,callback=self.parse)
 
     def parse(self, response):
         # print(type(response), type(str(response)), type(response.body.decode('utf-8')))
@@ -58,8 +66,6 @@ class QichachaSpider(scrapy.Spider):
         title = pattern.findall(r)[2::]
         pattern2 = re.compile(r'class="ma_left".*?>\s*(.*?)\s*<')
         info = pattern2.findall(r)
-        # print(len(title),title)
-        # print(len(info),info)
         qichacha.update({str(i).strip().replace('：', ''): t for i, t in zip(title, info)})
         for j, i in enumerate(sel.xpath('//*[@id="Sockinfo"]/table[@class="m_changeList"]/tr[position()>1]'), 1):
             shareholders = i.xpath('td/text()|td/div/a[1]/text()').extract()

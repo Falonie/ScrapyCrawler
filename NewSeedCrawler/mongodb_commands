@@ -1,0 +1,15 @@
+mongodump --archive=newseed_种子_crawled_result.gz --gzip --db Falonie --collection newseed_种子_crawled_result
+
+mongorestore --gzip --archive=newseed_种子_crawled_result.gz --db Falonie
+
+mongoexport --db Falonie --collection newseed_种子_urls --type=csv --fields url --out /media/salesmind/Other/PycharmProjects/work/NewSeed/newseed_种子_urls.csv
+
+mongoexport --db Falonie --collection newseed_天使_urls --type=csv --fields url --out E:\PycharmProjects\mind-ai-data\python\trunk\FalonieRepository\NewSeed\newseed_天使_urls.csv
+
+mongoexport --db Falonie --collection newseed_天使_crawled_result --type=csv --fields product,field,platform,location,homepage,establish_time,round,project_status,status,tags,description,contact,leadership,logo_url,url --out /home/salesmind/mind-ai-data/python/trunk/FalonieRepository/NewSeed/newseed_天使_crawled_result.csv
+
+mongoexport --db Falonie --collection newseed_A轮_scrapy --type=csv --fields product,field,platform,location,homepage,establish_time,round,project_status,status,tags,description,contact,leadership,logo_url,url --out /media/salesmind/Other/PycharmProjects/work/NewSeedCrawler/NewSeedCrawler/newseed_A轮_scrapy.csv
+
+mongoexport --db Falonie --collection newseed_股权投资_scrapy --type=csv --fields product,field,platform,location,homepage,establish_time,round,project_status,status,tags,description,contact,leadership,logo_url,url --out D:\PycharmProjects\mind-ai-data\python\trunk\FalonieRepository\NewSeedCrawler\NewSeedCrawler\newseed_股权投资_scrapy.csv
+
+mongoexport --db Falonie --collection newseed_IPO上市及以后_scrapy2 --type=csv --fields product,field,platform,location,homepage,establish_time,round,project_status,status,tags,description,contact,leadership,logo_url,url,company_name,brief_intro --out E:\PycharmProjects\mind-ai-data\python\trunk\FalonieRepository\NewSeedCrawler\NewSeedCrawler\newseed_IPO上市及以后_scrapy2.csv
