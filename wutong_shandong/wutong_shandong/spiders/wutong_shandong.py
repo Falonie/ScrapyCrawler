@@ -1,9 +1,6 @@
 import scrapy, re, requests, os
 from ..items import WutongShandongItem
 
-headers = {
-    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'}
-
 
 class WutongShandongSpider(scrapy.Spider):
     name = 'wutong_shandong'
@@ -29,9 +26,9 @@ class WutongShandongSpider(scrapy.Spider):
             # print(company_name, href, location, contact)
             yield scrapy.Request(url=href, meta={'item': item}, dont_filter=True, callback=self.brief)
 
-            # next_page = sel.xpath('//div[@class="fy_zwp"]/a[last()]/@href').extract_first()
-            # if next_page:
-            #     yield scrapy.Request(url=response.urljoin(next_page),callback=self.parse)
+        # next_page = sel.xpath('//div[@class="fy_zwp"]/a[last()]/@href').extract_first()
+        # if next_page:
+        #     yield scrapy.Request(url=response.urljoin(next_page),callback=self.parse)
 
     def brief(self, response):
         sel = scrapy.Selector(response)
@@ -41,13 +38,10 @@ class WutongShandongSpider(scrapy.Spider):
         brief = sel.xpath('//div[@class="jianjie-content"]/p/text()').extract()
         brief2 = pattern.sub('', ''.join(str(i).strip() for i in brief))
         wutong_shandong['brief'] = brief2
-        authentication = sel.xpath(
-            '//*[@id="aspnetForm"]/div[10]/div/div[2]/div[1]/div[2]/table/tbody/tr/td/ul[1]/li[2]/span[2]/text()|//*[@id="aspnetForm"]/div[10]/div/div[2]/div[1]/div/table/tbody/tr/td/ul[1]/li/span[2]/text()').extract_first(
-            default='N/A')
+        authentication = sel.xpath('//*[@id="aspnetForm"]/div[10]/div/div[2]/div[1]/div[2]/table/tbody/tr/td/ul[1]/li[2]/span[2]/text()|'
+                                   '//*[@id="aspnetForm"]/div[10]/div/div[2]/div[1]/div/table/tbody/tr/td/ul[1]/li/span[2]/text()').extract_first(default='N/A')
         wutong_shandong['authentication'] = authentication
-        href = sel.xpath(
-            '//*[@id="aspnetForm"]/div[10]/div/div[2]/div[1]/div[2]/table/tbody/tr/td/h2/a/@href').extract_first(
-            default='N/A')
+        href = sel.xpath('//*[@id="aspnetForm"]/div[10]/div/div[2]/div[1]/div[2]/table/tbody/tr/td/h2/a/@href').extract_first(default='N/A')
         # wutong_shandong['href2'] = href
         # item2 = {'brief': brief2, 'authentication': authentication}
         # item2.update(response.meta.get('item', {}))
