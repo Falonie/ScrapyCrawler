@@ -12,7 +12,7 @@ class QichachaSpider(scrapy.Spider):
     #     super(QichachaSpider, self).__init__(*args, **kwargs)
 
     def start_requests(self):
-        with open('/media/salesmind/Other/OTMS/qichacha_all_dimensions_test.txt', 'r') as f:
+        with open('/media/salesmind/0002C1F9000B55A8/Ctrip/库-365 (2).txt', 'r') as f:
             for i, line in enumerate(f.readlines(), 1):
                 # print(i, line.strip())
                 url = self.start_urls[0].format(line.strip())
@@ -43,7 +43,7 @@ class QichachaSpider(scrapy.Spider):
         a = {'company_name': company_name, 'legal_representative': legal_representative, 'email': email,
              'telephone': telephone}
         # print(company_name, href, unique_key)
-        print(type(href))
+        # print(type(href))
         yield scrapy.Request(url=basic_url.format(unique_key, company_name), meta={'item': a},
                              callback=self.parse_basic)
         yield scrapy.Request(url=business.format(unique_key, company_name), meta={'item': a},
@@ -82,7 +82,7 @@ class QichachaSpider(scrapy.Spider):
         introduction = sel.xpath('//section[@id="Comintroduce"]/div[2]/div/p/text()').extract()
         qichacha['introduction'] = ''.join(str(i).strip() for i in introduction)
         qichacha['分支机构'] = sel.xpath('//*[@id="Subcom"]/div[1]/span[2]/text()').extract_first(default='N/A')
-        # yield qichacha
+        yield qichacha
 
     def parse_business(self, response):
         # qichacha = QichachaItem()
@@ -110,7 +110,7 @@ class QichachaSpider(scrapy.Spider):
             financing_content = [str(i).strip() for i in item]
             financing_content = list(filter(lambda x: len(x) > 1, financing_content))
             qichacha.update({k: v for k, v in zip(head, financing_content)})
-        yield qichacha
+        # yield qichacha
 
     def parse_financial_report(self, response):
         # qichacha = QichachaItem()
